@@ -20,7 +20,7 @@ function InputRepo({handleFetch, handleFetchAll, handleDownload, loadingStatus})
     setOwner("");
   }
 
-  return (<Flex gap="4" justify="center">
+  return (<Flex gap="4" justify="center" wrap="wrap">
       <TextField.Root>
         <TextField.Slot>
           <GitHubLogoIcon height="16" width="16"/>
