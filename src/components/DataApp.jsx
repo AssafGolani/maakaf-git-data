@@ -1,8 +1,7 @@
 import React from "react";
 import fetchData from "../fetchData.js";
-import {Button, Table} from "@radix-ui/themes";
+import {Table} from "@radix-ui/themes";
 import InputRepo from "./InputRepo.jsx";
-import { downloadCSV, convertArrayToCSV } from "../formatCSV.js";
 
 function DataApp() {
   const [data, setData] = React.useState([]);
