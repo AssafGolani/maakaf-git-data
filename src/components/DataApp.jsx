@@ -33,7 +33,7 @@ function DataApp() {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-    };
+    }
 
   return (
     <>
@@ -55,13 +55,14 @@ function DataApp() {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {data.map(({ sha, author, email, date, additions, deletions }) => (
+          {data.map(({ sha, author, email, date, additions, deletions, total }) => (
             <Table.Row key={sha}>
               <Table.RowHeaderCell>{author}</Table.RowHeaderCell>
               <Table.Cell>{email}</Table.Cell>
               <Table.Cell>{date}</Table.Cell>
               <Table.Cell>{additions}</Table.Cell>
               <Table.Cell>{deletions}</Table.Cell>
+              <Table.Cell>{total}</Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
