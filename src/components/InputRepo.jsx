@@ -1,11 +1,17 @@
-import React from "react";
-import {Button, Flex, TextField} from "@radix-ui/themes";
-import {CodeIcon, GitHubLogoIcon} from "@radix-ui/react-icons";
+import { useState } from "react";
+import { Button, Flex, TextField } from "@radix-ui/themes";
+import { CodeIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
+import ScrollableDropDown from "./ScrollableDropDown";
 
-function InputRepo({handleFetch, handleFetchAll, handleDownload, loadingStatus}) {
-  const [owner, setOwner] = React.useState("hasadna");
-  const [repo, setRepo] = React.useState("open-bus-map-search");
-
+function InputRepo({
+  handleFetch,
+  handleFetchAll,
+  handleDownload,
+  repositories,
+  loadingStatus,
+}) {
+  const [owner, setOwner] = useState("hasadna");
+  const [repo, setRepo] = useState("open-bus-map-search");
 
   //TODO: Refactor and consolidate...
   function handleSubmit(owner, repo) {
@@ -20,10 +26,11 @@ function InputRepo({handleFetch, handleFetchAll, handleDownload, loadingStatus})
     setOwner("");
   }
 
-  return (<Flex gap="4" justify="center" wrap="wrap">
+  return (
+    <Flex gap="4" justify="center" wrap="wrap">
       <TextField.Root>
         <TextField.Slot>
-          <GitHubLogoIcon height="16" width="16"/>
+          <GitHubLogoIcon height="16" width="16" />
         </TextField.Slot>
         <TextField.Input
           placeholder="Enter Owner…"
@@ -32,9 +39,14 @@ function InputRepo({handleFetch, handleFetchAll, handleDownload, loadingStatus})
         />
       </TextField.Root>
 
+      <ScrollableDropDown
+        repositories={repositories}
+        loadingStatus={loadingStatus}
+      />
+
       <TextField.Root>
         <TextField.Slot>
-          <CodeIcon height="16" width="16"/>
+          <CodeIcon height="16" width="16" />
         </TextField.Slot>
         <TextField.Input
           placeholder="Enter Repo…"
@@ -70,7 +82,8 @@ function InputRepo({handleFetch, handleFetchAll, handleDownload, loadingStatus})
       >
         {loadingStatus === true ? "Loading..." : "Download CSV"}
       </Button>
-    </Flex>);
+    </Flex>
+  );
 }
 
 export default InputRepo;
