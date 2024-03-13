@@ -1,5 +1,10 @@
 import React from "react";
-import { fetchDataSample, saveCSV } from "../services/fetchDataSample.js";
+import {
+  fetchSampleData,
+  fetchFullData,
+  saveCSV,
+} from "../services/fetchData.js";
+
 import { Table } from "@radix-ui/themes";
 import InputRepo from "./InputRepo.jsx";
 
@@ -10,7 +15,20 @@ function DataApp() {
   function handleFetch(owner, repo) {
     setIsLoading(true);
     try {
-      fetchDataSample(owner, repo).then((data) => {
+      fetchSampleData(owner, repo).then((data) => {
+        setData(data);
+        setIsLoading(false);
+      });
+    } catch (error) {
+      console.info(error);
+    }
+  }
+
+  //TODO: refactor with input component, combine both fetch functions.
+  function handleFetchAll(owner, repo) {
+    setIsLoading(true);
+    try {
+      fetchFullData(owner, repo).then((data) => {
         setData(data);
         setIsLoading(false);
       });
@@ -27,6 +45,7 @@ function DataApp() {
     <>
       <InputRepo
         handleFetch={handleFetch}
+        handleFetchAll={handleFetchAll}
         handleDownload={handleDownload}
         loadingStatus={isLoading}
       />
