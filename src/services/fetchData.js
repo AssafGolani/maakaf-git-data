@@ -9,41 +9,47 @@ const octokit = new MyOctokit({
   auth: import.meta.env.VITE_GITHUB_API_TOKEN,
 });
 
-//TODO: Make the first fetch a "sample" fetch with octokit.request, then make a subsequent fetch a full paginate fetch.
-//TODO: Implement stream fetch with rendering, for large data sets.
+//TODO: Implement stream fetch(?)
 
 async function fetchSampleData(owner, repo) {
   try {
     const commits = await octokit.request("GET /repos/{owner}/{repo}/commits", {
       owner,
       repo,
-      // 100 Per page is the maximum afforded by the GitHub API.
       per_page: 100,
     });
-    const commitDetails = [];
-    for (const commit of commits.data) {
-      const commitDetail = await octokit.request(
-        "GET /repos/{owner}/{repo}/commits/{sha}",
-        {
+    const commitPromises = commits.data.map((commit) =>
+      octokit
+        .request("GET /repos/{owner}/{repo}/commits/{sha}", {
           owner,
           repo,
           sha: commit.sha,
-        },
-      );
-      const info = {
-        sha: commitDetail.data.sha,
-        author: commitDetail.data.commit.author.name,
-        email: commitDetail.data.commit.author.email,
-        date: commitDetail.data.commit.author.date,
-        additions: commitDetail.data.stats.additions,
-        deletions: commitDetail.data.stats.deletions,
-        total: commitDetail.data.stats.total,
-      };
-      commitDetails.push(info);
-    }
-    return commitDetails;
+        })
+        .then((commitDetail) => ({
+          sha: commitDetail.data.sha,
+          author: commitDetail.data.commit.author.name,
+          email: commitDetail.data.commit.author.email,
+          date: new Date(
+            commitDetail.data.commit.author.date,
+          ).toLocaleDateString("en-IL", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            timeZoneName: "short",
+          }),
+          additions: commitDetail.data.stats.additions,
+          deletions: commitDetail.data.stats.deletions,
+          total: commitDetail.data.stats.total,
+        })),
+    );
+    let commitSample = await Promise.all(commitPromises);
+    return commitSample;
   } catch (error) {
     console.error(`Error fetching data: ${error}`);
+    return []; // Return an empty array or handle the error as needed
   }
 }
 
@@ -71,7 +77,18 @@ async function fetchFullData(owner, repo) {
         sha: commitDetail.data.sha,
         author: commitDetail.data.commit.author.name,
         email: commitDetail.data.commit.author.email,
-        date: commitDetail.data.commit.author.date,
+        date: new Date(commitDetail.data.commit.author.date).toLocaleDateString(
+          "en-IL",
+          {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            timeZoneName: "short",
+          },
+        ),
         additions: commitDetail.data.stats.additions,
         deletions: commitDetail.data.stats.deletions,
         total: commitDetail.data.stats.total,
@@ -89,9 +106,11 @@ async function fetchFullData(owner, repo) {
       const details = await Promise.all(detailsPromises);
       commitDetails = commitDetails.concat(details);
     }
+
     return commitDetails;
   } catch (error) {
     console.error(`Error fetching data: ${error}`);
+    return [];
   }
 }
 

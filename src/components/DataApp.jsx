@@ -4,7 +4,6 @@ import {
   fetchFullData,
   saveCSV,
 } from "../services/fetchData.js";
-
 import { Table } from "@radix-ui/themes";
 import InputRepo from "./InputRepo.jsx";
 
