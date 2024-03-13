@@ -42,15 +42,16 @@ function InputRepo({ handleFetch, handleDownload, loadingStatus }) {
         onClick={() => handleSubmit(owner, repo)}
         disabled={loadingStatus === true}
       >
-        {loadingStatus === true ? "Loading..." : "Fetch Data"}
+        {loadingStatus === true ? "Loading..." : "Fetch Data Sample"}
       </Button>
       <Button
         size="2"
         variant="soft"
         color="crimson"
+        disabled={loadingStatus === true}
         onClick={() => handleDownload()}
       >
-        Download JSON
+        {loadingStatus === true ? "Loading..." : "Download CSV"}
       </Button>
     </Flex>
   );
