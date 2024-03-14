@@ -1,3 +1,4 @@
+/* eslint-disable no-constant-condition */
 import { Octokit } from "@octokit/core";
 import { paginateRest } from "@octokit/plugin-paginate-rest";
 import { Parser } from "@json2csv/plainjs";
@@ -115,9 +116,23 @@ async function fetchFullData(owner, repo) {
 }
 
 async function getRepositoriesOfOwner(owner) {
-  return await octokit.request("GET /users/{owner}/repos", {
-    owner,
-  });
+  let page = 1;
+  let allRepos = [];
+  while (true) {
+    const res = await octokit.request("GET /users/{owner}/repos", {
+      owner,
+      per_page: 100,
+      page: page,
+    });
+
+    allRepos = allRepos.concat(res.data);
+
+    if (res.data.length < 100) {
+      break;
+    }
+    page++;
+  }
+  return allRepos;
 }
 
 function saveCSV(data) {
