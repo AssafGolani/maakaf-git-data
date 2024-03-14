@@ -2,19 +2,19 @@ import { createContext, useEffect, useState } from "react";
 
 const initialState = {
   theme: "system",
-  setTheme: () => null
+  setTheme: () => null,
 };
 
 export const ThemeProviderContext = createContext(initialState);
 
 export function ThemeProvider({
-                                children,
-                                defaultTheme = "system",
-                                storageKey = "ui-theme",
-                                ...props
-                              }) {
+  children,
+  defaultTheme = "system",
+  storageKey = "ui-theme",
+  ...props
+}) {
   const [theme, setTheme] = useState(
-    () => localStorage.getItem(storageKey) || defaultTheme
+    () => localStorage.getItem(storageKey) || defaultTheme,
   );
 
   useEffect(() => {
@@ -40,7 +40,7 @@ export function ThemeProvider({
     setTheme: (theme) => {
       localStorage.setItem(storageKey, theme);
       setTheme(theme);
-    }
+    },
   };
 
   return (

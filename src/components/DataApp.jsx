@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import react from "react";
 import {
   fetchSampleData,
   fetchFullData,
@@ -9,10 +9,10 @@ import { Table } from "@radix-ui/themes";
 import InputRepo from "./InputRepo.jsx";
 
 function DataApp() {
-  const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [repositories, setRepositories] = useState([]);
-  const [owner, setOwner] = useState("hasadna");
+  const [data, setData] = react.useState([]);
+  const [isLoading, setIsLoading] = react.useState(false);
+  const [repositories, setRepositories] = react.useState([]);
+  const [owner, setOwner] = react.useState("hasadna");
 
   function handleFetch(owner, repo) {
     setIsLoading(true);
@@ -26,11 +26,10 @@ function DataApp() {
     }
   }
 
-  useEffect(() => {
+  react.useEffect(() => {
     const fetchDataAndSetOptions = async () => {
       try {
         const response = await getRepositoriesOfOwner(owner);
-        // console.log("RESPONSE + " + JSON.stringify(response.data));
         setRepositories(response);
       } catch (error) {
         console.error(`Error fetching data: ${error}`);
@@ -87,7 +86,7 @@ function DataApp() {
                 <Table.Cell>{deletions}</Table.Cell>
                 <Table.Cell>{total}</Table.Cell>
               </Table.Row>
-            )
+            ),
           )}
         </Table.Body>
       </Table.Root>

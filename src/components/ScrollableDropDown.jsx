@@ -4,7 +4,7 @@ export default function ScrollableDropDown({ options, loadingStatus }) {
   const filterOptions = (inputValue) => {
     const mOptions = options;
     const selectedOption = mOptions.filter((i) =>
-      i.label.toLowerCase().includes(inputValue.toLowerCase())
+      i.label.toLowerCase().includes(inputValue.toLowerCase()),
     );
     return selectedOption;
   };
