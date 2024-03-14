@@ -1,9 +1,8 @@
 import AsyncSelect from "react-select/async";
 
-export default function ScrollableDropDown({ options, loadingStatus }) {
+function ScrollableDropDown({ options, loadingStatus }) {
   const filterOptions = (inputValue) => {
-    const mOptions = options;
-    const selectedOption = mOptions.filter((i) =>
+    const selectedOption = options.filter((i) =>
       i.label.toLowerCase().includes(inputValue.toLowerCase()),
     );
     return selectedOption;
@@ -25,3 +24,5 @@ export default function ScrollableDropDown({ options, loadingStatus }) {
     />
   );
 }
+
+export default ScrollableDropDown;

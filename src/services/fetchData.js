@@ -1,4 +1,3 @@
-/* eslint-disable no-constant-condition */
 import { Octokit } from "@octokit/core";
 import { paginateRest } from "@octokit/plugin-paginate-rest";
 import { Parser } from "@json2csv/plainjs";
@@ -10,8 +9,7 @@ const octokit = new MyOctokit({
   auth: import.meta.env.VITE_GITHUB_API_TOKEN,
 });
 
-//TODO: Implement stream fetch(?)
-
+// Fetch a sample of the data on commits from a repository
 async function fetchSampleData(owner, repo) {
   try {
     const commits = await octokit.request("GET /repos/{owner}/{repo}/commits", {
@@ -54,7 +52,7 @@ async function fetchSampleData(owner, repo) {
   }
 }
 
-//Refactor.
+// Fetch all data on commits from a repository.
 async function fetchFullData(owner, repo) {
   try {
     const commits = await octokit.paginate(
@@ -115,6 +113,7 @@ async function fetchFullData(owner, repo) {
   }
 }
 
+// Function to get repositories of an owner, used for the dropdown menu
 async function getRepositoriesOfOwner(owner) {
   let page = 1;
   let allRepos = [];
@@ -124,9 +123,7 @@ async function getRepositoriesOfOwner(owner) {
       per_page: 100,
       page: page,
     });
-
     allRepos = allRepos.concat(res.data);
-
     if (res.data.length < 100) {
       break;
     }
@@ -135,6 +132,7 @@ async function getRepositoriesOfOwner(owner) {
   return allRepos;
 }
 
+// Saves a file in CSV format
 function saveCSV(data) {
   try {
     const parser = new Parser();
