@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Flex, TextField } from "@radix-ui/themes";
-import { CodeIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import ScrollableDropDown from "./ScrollableDropDown";
 
 function InputRepo({
@@ -12,6 +12,7 @@ function InputRepo({
 }) {
   const [owner, setOwner] = useState("hasadna");
   const [repo, setRepo] = useState("open-bus-map-search");
+  const [reposName, setReposName] = useState([]);
 
   //TODO: Refactor and consolidate...
   function handleSubmit(owner, repo) {
@@ -25,6 +26,22 @@ function InputRepo({
     setRepo("");
     setOwner("");
   }
+
+  useEffect(() => {
+    let repositoriesArray = [];
+    if (repositories && repositories.length > 0) {
+      repositoriesArray = repositories.map((repository) => {
+        return { value: repository.name, label: repository.name };
+      });
+      console.log(
+        "ReposName: " +
+          JSON.stringify(repositoriesArray) +
+          " " +
+          repositoriesArray.length
+      );
+      setReposName(repositoriesArray);
+    }
+  }, [repositories]);
 
   return (
     <Flex gap="4" justify="center" wrap="wrap">
@@ -40,6 +57,7 @@ function InputRepo({
       </TextField.Root>
 
       <ScrollableDropDown
+        options={reposName}
         repositories={repositories}
         loadingStatus={loadingStatus}
       />
