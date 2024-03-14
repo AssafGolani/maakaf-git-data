@@ -1,8 +1,9 @@
+/* eslint-disable no-constant-condition */
 import { Octokit } from "@octokit/core";
 import { paginateRest } from "@octokit/plugin-paginate-rest";
 import { Parser } from "@json2csv/plainjs";
 
-export { fetchSampleData, fetchFullData, saveCSV };
+export { fetchSampleData, fetchFullData, getRepositoriesOfOwner, saveCSV };
 
 const MyOctokit = Octokit.plugin(paginateRest);
 const octokit = new MyOctokit({
@@ -30,7 +31,7 @@ async function fetchSampleData(owner, repo) {
           author: commitDetail.data.commit.author.name,
           email: commitDetail.data.commit.author.email,
           date: new Date(
-            commitDetail.data.commit.author.date,
+            commitDetail.data.commit.author.date
           ).toLocaleDateString("en-IL", {
             year: "numeric",
             month: "long",
@@ -43,7 +44,7 @@ async function fetchSampleData(owner, repo) {
           additions: commitDetail.data.stats.additions,
           deletions: commitDetail.data.stats.deletions,
           total: commitDetail.data.stats.total,
-        })),
+        }))
     );
     let commitSample = await Promise.all(commitPromises);
     return commitSample;
@@ -62,7 +63,7 @@ async function fetchFullData(owner, repo) {
         owner,
         repo,
         per_page: 100,
-      },
+      }
     );
     const fetchCommitDetails = async (commit) => {
       const commitDetail = await octokit.request(
@@ -71,7 +72,7 @@ async function fetchFullData(owner, repo) {
           owner,
           repo,
           sha: commit.sha,
-        },
+        }
       );
       return {
         sha: commitDetail.data.sha,
@@ -87,7 +88,7 @@ async function fetchFullData(owner, repo) {
             minute: "2-digit",
             second: "2-digit",
             timeZoneName: "short",
-          },
+          }
         ),
         additions: commitDetail.data.stats.additions,
         deletions: commitDetail.data.stats.deletions,
@@ -112,6 +113,26 @@ async function fetchFullData(owner, repo) {
     console.error(`Error fetching data: ${error}`);
     return [];
   }
+}
+
+async function getRepositoriesOfOwner(owner) {
+  let page = 1;
+  let allRepos = [];
+  while (true) {
+    const res = await octokit.request("GET /users/{owner}/repos", {
+      owner,
+      per_page: 100,
+      page: page,
+    });
+
+    allRepos = allRepos.concat(res.data);
+
+    if (res.data.length < 100) {
+      break;
+    }
+    page++;
+  }
+  return allRepos;
 }
 
 function saveCSV(data) {

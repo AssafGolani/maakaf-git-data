@@ -1,15 +1,18 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import {
   fetchSampleData,
   fetchFullData,
+  getRepositoriesOfOwner,
   saveCSV,
 } from "../services/fetchData.js";
 import { Table } from "@radix-ui/themes";
 import InputRepo from "./InputRepo.jsx";
 
 function DataApp() {
-  const [data, setData] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [repositories, setRepositories] = useState([]);
+  const [owner, setOwner] = useState("hasadna");
 
   function handleFetch(owner, repo) {
     setIsLoading(true);
@@ -22,6 +25,19 @@ function DataApp() {
       console.info(error);
     }
   }
+
+  useEffect(() => {
+    const fetchDataAndSetOptions = async () => {
+      try {
+        const response = await getRepositoriesOfOwner(owner);
+        // console.log("RESPONSE + " + JSON.stringify(response.data));
+        setRepositories(response);
+      } catch (error) {
+        console.error(`Error fetching data: ${error}`);
+      }
+    };
+    fetchDataAndSetOptions();
+  }, []);
 
   //TODO: refactor with input component, combine both fetch functions.
   function handleFetchAll(owner, repo) {
@@ -46,6 +62,7 @@ function DataApp() {
         handleFetch={handleFetch}
         handleFetchAll={handleFetchAll}
         handleDownload={handleDownload}
+        repositories={repositories}
         loadingStatus={isLoading}
       />
       <Table.Root>
@@ -70,7 +87,7 @@ function DataApp() {
                 <Table.Cell>{deletions}</Table.Cell>
                 <Table.Cell>{total}</Table.Cell>
               </Table.Row>
-            ),
+            )
           )}
         </Table.Body>
       </Table.Root>

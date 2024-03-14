@@ -1,11 +1,18 @@
-import React from "react";
-import {Button, Flex, TextField} from "@radix-ui/themes";
-import {CodeIcon, GitHubLogoIcon} from "@radix-ui/react-icons";
+import { useState, useEffect } from "react";
+import { Button, Flex, TextField } from "@radix-ui/themes";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import ScrollableDropDown from "./ScrollableDropDown";
 
-function InputRepo({handleFetch, handleFetchAll, handleDownload, loadingStatus}) {
-  const [owner, setOwner] = React.useState("hasadna");
-  const [repo, setRepo] = React.useState("open-bus-map-search");
-
+function InputRepo({
+  handleFetch,
+  handleFetchAll,
+  handleDownload,
+  repositories,
+  loadingStatus,
+}) {
+  const [owner, setOwner] = useState("hasadna");
+  const [repo, setRepo] = useState("open-bus-map-search");
+  const [reposName, setReposName] = useState([]);
 
   //TODO: Refactor and consolidate...
   function handleSubmit(owner, repo) {
@@ -20,10 +27,27 @@ function InputRepo({handleFetch, handleFetchAll, handleDownload, loadingStatus})
     setOwner("");
   }
 
-  return (<Flex gap="4" justify="center" wrap="wrap">
+  useEffect(() => {
+    let repositoriesArray = [];
+    if (repositories && repositories.length > 0) {
+      repositoriesArray = repositories.map((repository) => {
+        return { value: repository.name, label: repository.name };
+      });
+      console.log(
+        "ReposName: " +
+          JSON.stringify(repositoriesArray) +
+          " " +
+          repositoriesArray.length
+      );
+      setReposName(repositoriesArray);
+    }
+  }, [repositories]);
+
+  return (
+    <Flex gap="4" justify="center" wrap="wrap">
       <TextField.Root>
         <TextField.Slot>
-          <GitHubLogoIcon height="16" width="16"/>
+          <GitHubLogoIcon height="16" width="16" />
         </TextField.Slot>
         <TextField.Input
           placeholder="Enter Owner…"
@@ -32,16 +56,7 @@ function InputRepo({handleFetch, handleFetchAll, handleDownload, loadingStatus})
         />
       </TextField.Root>
 
-      <TextField.Root>
-        <TextField.Slot>
-          <CodeIcon height="16" width="16"/>
-        </TextField.Slot>
-        <TextField.Input
-          placeholder="Enter Repo…"
-          value={repo}
-          onChange={(e) => setRepo(e.target.value)}
-        />
-      </TextField.Root>
+      <ScrollableDropDown options={reposName} loadingStatus={loadingStatus} />
 
       <Button
         size="2"
@@ -70,7 +85,8 @@ function InputRepo({handleFetch, handleFetchAll, handleDownload, loadingStatus})
       >
         {loadingStatus === true ? "Loading..." : "Download CSV"}
       </Button>
-    </Flex>);
+    </Flex>
+  );
 }
 
 export default InputRepo;
