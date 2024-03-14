@@ -30,8 +30,8 @@ function DataApp() {
     const fetchDataAndSetOptions = async () => {
       try {
         const response = await getRepositoriesOfOwner(owner);
-        console.log("RESPONSE + " + JSON.stringify(response.data));
-        setRepositories(response.data);
+        // console.log("RESPONSE + " + JSON.stringify(response.data));
+        setRepositories(response);
       } catch (error) {
         console.error(`Error fetching data: ${error}`);
       }
