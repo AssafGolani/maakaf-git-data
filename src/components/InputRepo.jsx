@@ -44,17 +44,6 @@ function InputRepo({
         loadingStatus={loadingStatus}
       />
 
-      <TextField.Root>
-        <TextField.Slot>
-          <CodeIcon height="16" width="16" />
-        </TextField.Slot>
-        <TextField.Input
-          placeholder="Enter Repo…"
-          value={repo}
-          onChange={(e) => setRepo(e.target.value)}
-        />
-      </TextField.Root>
-
       <Button
         size="2"
         variant="soft"
