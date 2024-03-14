@@ -56,11 +56,7 @@ function InputRepo({
         />
       </TextField.Root>
 
-      <ScrollableDropDown
-        options={reposName}
-        repositories={repositories}
-        loadingStatus={loadingStatus}
-      />
+      <ScrollableDropDown options={reposName} loadingStatus={loadingStatus} />
 
       <Button
         size="2"
