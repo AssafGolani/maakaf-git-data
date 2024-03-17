@@ -2,16 +2,39 @@ import AsyncSelect from "react-select/async";
 
 function ScrollableDropDown({ options, loadingStatus }) {
   const filterOptions = (inputValue) => {
-    const selectedOption = options.filter((i) =>
+    return options.filter((i) =>
       i.label.toLowerCase().includes(inputValue.toLowerCase()),
     );
-    return selectedOption;
   };
 
   const loadOptions = (inputValue, callback) => {
     setTimeout(() => {
       callback(filterOptions(inputValue));
     }, 1000);
+  };
+
+  const customStyles = {
+    control: (provided) => ({
+      ...provided,
+      backgroundColor: 'black',
+      color: 'white',
+    }),
+    menu: (provided) => ({
+      ...provided,
+      backgroundColor: 'black',
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected ? 'grey' : 'black',
+      color: 'white',
+      '&:hover': {
+        backgroundColor: 'grey',
+      },
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      color: 'white',
+    }),
   };
 
   return (
@@ -21,6 +44,7 @@ function ScrollableDropDown({ options, loadingStatus }) {
       defaultOptions={options}
       defaultValue={options[0]}
       loadingStatus={loadingStatus}
+      styles={customStyles}
     />
   );
 }
