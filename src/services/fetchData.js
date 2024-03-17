@@ -27,6 +27,7 @@ async function fetchSampleData(owner, repo) {
         .then((commitDetail) => ({
           sha: commitDetail.data.sha,
           author: commitDetail.data.commit.author.name,
+          author_id: commitDetail.data.author.id,
           email: commitDetail.data.commit.author.email,
           date: new Date(
             commitDetail.data.commit.author.date,
@@ -75,6 +76,7 @@ async function fetchFullData(owner, repo) {
       return {
         sha: commitDetail.data.sha,
         author: commitDetail.data.commit.author.name,
+        author_id: commitDetail.data.author?.id,
         email: commitDetail.data.commit.author.email,
         date: new Date(commitDetail.data.commit.author.date).toLocaleDateString(
           "en-IL",
@@ -105,7 +107,6 @@ async function fetchFullData(owner, repo) {
       const details = await Promise.all(detailsPromises);
       commitDetails = commitDetails.concat(details);
     }
-
     return commitDetails;
   } catch (error) {
     console.error(`Error fetching data: ${error}`);

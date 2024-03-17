@@ -68,18 +68,21 @@ function DataApp() {
         <Table.Header>
           <Table.Row>
             <Table.ColumnHeaderCell>Author</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell>Author ID</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>Email</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>Date</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>Additions</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>Deletions</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>Total</Table.ColumnHeaderCell>
+
           </Table.Row>
         </Table.Header>
         <Table.Body>
           {data.map(
-            ({ sha, author, email, date, additions, deletions, total }) => (
+            ({ sha, author, email, date, additions, deletions, total, author_id}) => (
               <Table.Row key={sha}>
                 <Table.RowHeaderCell>{author}</Table.RowHeaderCell>
+                <Table.Cell>{author_id}</Table.Cell>
                 <Table.Cell>{email}</Table.Cell>
                 <Table.Cell>{date}</Table.Cell>
                 <Table.Cell>{additions}</Table.Cell>
